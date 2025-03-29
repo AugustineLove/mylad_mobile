@@ -1,8 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:myladmobile/provider/schoolsProvider.dart';
 import 'package:myladmobile/views/search_for_school.dart';
+import 'package:provider/provider.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => SchoolProvider()),
+      ],
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {

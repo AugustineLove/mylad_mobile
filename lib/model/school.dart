@@ -9,4 +9,12 @@ class School {
     required this.schoolLogo,
   });
 
+  factory School.fromJson(Map<String, dynamic> json) {
+    return School(
+      schoolName: json['schoolName'],
+      schoolMoto: json['schoolAddress'],
+      schoolLogo: json['schoolPhone'],
+    );
+  }
+
 }

@@ -7,15 +7,19 @@ class MyTexts {
     double? fontSize,
     bool? softWrap,
     TextOverflow? overflow,
+    TextAlign? textAlign,
+    FontWeight? fontWeight,
   }) {
     return Text(
       text,
       softWrap: softWrap ?? true,
+      textAlign: textAlign,
       style: TextStyle(
         fontSize: fontSize ?? 12,
         fontFamily: 'Poppins',
         color: textColor,
         overflow: overflow,
+        fontWeight: fontWeight,
       ),
     );
   }
@@ -26,10 +30,13 @@ class MyTexts {
     double? fontSize,
     bool? softWrap,
     TextOverflow? overflow,
+    TextAlign? textAlign,
+    FontWeight? fontWeight,
   }) {
     return Text(
       text,
       softWrap: softWrap ?? true,
+      textAlign: textAlign,
       style: TextStyle(
         fontWeight: FontWeight.bold,
         fontSize: fontSize ?? 15,

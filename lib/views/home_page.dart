@@ -1,7 +1,10 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:myladmobile/extensions/spacing.dart';
+import 'package:myladmobile/model/student.dart';
 import 'package:myladmobile/utils/colors.dart';
 import 'package:myladmobile/utils/text.dart';
+import 'package:myladmobile/views/student_page.dart';
 import 'package:myladmobile/widget/child_card.dart';
 
 class HomePage extends StatefulWidget {
@@ -12,6 +15,25 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  List<Student> students = [
+    Student(
+        studentName: "Amazing Love Stephens",
+        studentClass: "J.H.S 2",
+        studentSchoolFees: 400,
+        studentPTAFees: 100,
+        studentExamFees: 120,
+        studentAdmissionFees: 200,
+        studentSportsFee: 50),
+    Student(
+        studentName: "Damiel Love Stephens",
+        studentClass: "J.H.S 3",
+        studentSchoolFees: 500, 
+        studentPTAFees: 1280,
+        studentExamFees: 140,
+        studentAdmissionFees: 50,
+        studentSportsFee: 10),
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -23,16 +45,12 @@ class _HomePageState extends State<HomePage> {
         child: ListView(
           padding: EdgeInsets.zero,
           children: [
-            const DrawerHeader(
-              decoration: BoxDecoration(color: Colors.blue),
-              child: Text('Drawer Header'),
-            ),
             ListTile(
-              title: const Text('Item 1'),
+              title: const Text('GREENWOOD ACADEMY'),
               onTap: () {},
             ),
             ListTile(
-              title: const Text('Item 2'),
+              title: const Text('WESTERN HAPPY HOME'),
               onTap: () {},
             ),
           ],
@@ -72,12 +90,27 @@ class _HomePageState extends State<HomePage> {
                 ),
               ],
             ),
-            const SizedBox(height: 20),
+            20.0.vSpace,
+            MyTexts().titleText(
+              "Kids",
+              textColor: AppColors().primaryColor,
+            ),
+            20.0.vSpace,
             Expanded(
               child: ListView.builder(
-                itemCount: 3,
+                itemCount: students.length,
                 itemBuilder: (context, index) {
-                  return const ChildCard();
+                  final Student student = students[index];
+                  return InkWell(
+                      onTap: () {
+                        Navigator.of(context).push(CupertinoPageRoute(
+                            builder: (context) => StudentPage(
+                                  student: student,
+                                )));
+                      },
+                      child: ChildCard(
+                        student: student,
+                      ));
                 },
               ),
             ),

@@ -12,4 +12,6 @@ class AppColors {
   Color strokeColor = HexColor("#E2E2E2");
   Color greyColor = HexColor("#B5AFAF");
   Color yellowColor = HexColor("#ffbb39");
+  Color redColor = HexColor("#E24B4E");
+  Color blueColor = HexColor("#42BEDA");
 }

@@ -134,7 +134,10 @@ class AutocompleteBasicUserExample extends StatelessWidget {
                 borderSide: BorderSide(
               color: AppColors().greyColor,
             )),
-            hintStyle: TextStyle(fontFamily: fontFamily),
+            hintStyle: TextStyle(
+              fontFamily: fontFamily,
+              color: AppColors().strokeColor,
+            ),
             hintText: "Search for school",
             border:
                 OutlineInputBorder(borderRadius: BorderRadius.circular(8.0)),
