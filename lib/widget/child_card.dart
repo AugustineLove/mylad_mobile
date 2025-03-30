@@ -15,13 +15,16 @@ class ChildCard extends StatelessWidget {
       child: Row(
         children: [
           Container(
-            width: 50,
-            height: 50,
-            decoration: BoxDecoration(
-              color: AppColors().greyColor,
-              shape: BoxShape.circle,
-            ),
-          ),
+              width: 50,
+              height: 50,
+              decoration: BoxDecoration(
+                color: AppColors().blueColor,
+                shape: BoxShape.circle,
+              ),
+              child: Center(
+                child: MyTexts().titleText(student.studentName[0],
+                    textColor: AppColors().whiteColor),
+              )),
           20.0.hSpace,
           Expanded(
             // This prevents overflow
@@ -43,22 +46,12 @@ class ChildCard extends StatelessWidget {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        MyTexts().titleText(student.studentName),
-                        MyTexts().regularText(student.studentClass),
+                        MyTexts()
+                            .regularText(student.studentName, fontSize: 14),
+                        MyTexts().regularText(student.studentClassName),
                       ],
                     ),
                     const Spacer(), // Prevent overflow issue
-                    Container(
-                      width: 60, // Added fixed width
-                      height: 30, // Added fixed height
-                      decoration: BoxDecoration(
-                        color: AppColors().yellowColor,
-                        borderRadius: BorderRadius.circular(5),
-                      ),
-                      child: Center(
-                        child: MyTexts().regularText("Pay"),
-                      ),
-                    ),
                   ],
                 ),
               ),

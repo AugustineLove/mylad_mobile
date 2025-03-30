@@ -19,7 +19,7 @@ class FeesCatCard extends StatelessWidget {
       child: Center(
         child: MyTexts().regularText(
           textAlign: TextAlign.center,
-          "Pay \n$label",
+          label,
           textColor: AppColors().whiteColor,
         ),
       ),

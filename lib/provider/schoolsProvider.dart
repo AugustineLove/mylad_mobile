@@ -16,10 +16,12 @@ class SchoolProvider with ChangeNotifier {
     notifyListeners();
 
     try {
-      _schools = await SchoolService().fetchSchools();
-    } catch (e) {
-      _errorMessage = "Error fetching schools";
-    }
+  _schools = await SchoolService().fetchSchools();
+} catch (e) {
+  _errorMessage = "Error fetching schools: $e";
+  debugPrint(_errorMessage); // Log the actual error
+}
+
 
     _isLoading = false;
     notifyListeners();

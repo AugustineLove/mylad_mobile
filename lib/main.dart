@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:myladmobile/provider/parentProvider.dart';
 import 'package:myladmobile/provider/schoolsProvider.dart';
 import 'package:myladmobile/views/search_for_school.dart';
+import 'package:myladmobile/views/verify_number.dart';
 import 'package:provider/provider.dart';
 
 void main() {
@@ -8,6 +10,7 @@ void main() {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => SchoolProvider()),
+        ChangeNotifierProvider(create: (context) => ParentProvider())
       ],
       child: const MyApp(),
     ),
@@ -27,7 +30,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const SearchForSchool(),
+      home: const VerifyNumber(),
     );
   }
 }

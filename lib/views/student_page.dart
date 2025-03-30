@@ -2,113 +2,160 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:myladmobile/extensions/spacing.dart';
 import 'package:myladmobile/model/student.dart';
+import 'package:myladmobile/provider/parentProvider.dart';
 import 'package:myladmobile/utils/colors.dart';
 import 'package:myladmobile/utils/text.dart';
-import 'package:myladmobile/views/pay_fees.dart';
 import 'package:myladmobile/widget/fees_card.dart';
 import 'package:myladmobile/widget/fees_cat_card.dart';
+import 'package:provider/provider.dart';
 
 class StudentPage extends StatefulWidget {
-  final Student student;
-  const StudentPage({super.key, required this.student});
+  final Student initialStudent;
+
+  const StudentPage({super.key, required this.initialStudent});
 
   @override
   State<StudentPage> createState() => _StudentPageState();
 }
 
 class _StudentPageState extends State<StudentPage> {
-  Map<String, Color> feeCatCard = {
-    'School Fees': AppColors().primaryColor,
-    'PTA Fees': AppColors().yellowColor,
-    'Admission Fees': AppColors().redColor,
-    'Sports Fees': AppColors().blueColor,
-  };
+  late Student selectedStudent;
+
+  @override
+  void initState() {
+    super.initState();
+    selectedStudent = widget.initialStudent;
+  }
+
+  void _showStudentSwitcher(BuildContext context, List<Student> students) {
+    showModalBottomSheet(
+      context: context,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (context) {
+        return Container(
+          decoration: BoxDecoration(
+            color: AppColors().whiteColor,
+            borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+          ),
+          padding: EdgeInsets.all(20),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              MyTexts().titleText("Switch child", fontSize: 18),
+              10.0.vSpace,
+              ...students.map((student) {
+                return ListTile(
+                  leading: CircleAvatar(
+                    backgroundColor: AppColors().blueColor,
+                    child: MyTexts().regularText(
+                      student.studentName[0],
+                      textColor: AppColors().whiteColor,
+                    ),
+                  ),
+                  title: MyTexts().regularText(student.studentName),
+                  subtitle: MyTexts().regularText(student.schoolName),
+                  onTap: () {
+                    setState(() {
+                      selectedStudent = student;
+                    });
+                    Navigator.pop(context);
+                  },
+                );
+              }).toList(),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: AppColors().whiteColor,
-      ),
-      backgroundColor: AppColors().whiteColor,
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 30.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
+    return Consumer<ParentProvider>(
+      builder: (context, parentProvider, child) {
+        List<Student> students = parentProvider.students;
+
+        // Ensure the selected student stays updated if changes occur
+        if (!students.contains(selectedStudent) && students.isNotEmpty) {
+          selectedStudent = students.first;
+        }
+
+        return Scaffold(
+          appBar: AppBar(
+            backgroundColor: AppColors().whiteColor,
+            actions: [
+              IconButton(
+                icon: Icon(Icons.person, color: AppColors().primaryColor),
+                onPressed: () => _showStudentSwitcher(context, students),
+              ),
+            ],
+          ),
+          backgroundColor: AppColors().whiteColor,
+          body: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 30.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Container(
-                  width: 80,
-                  height: 80,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: AppColors().greyColor,
-                  ),
+                Row(
+                  children: [
+                    Container(
+                      width: 80,
+                      height: 80,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: AppColors().blueColor,
+                      ),
+                      child: Center(
+                        child: MyTexts().titleText(
+                          selectedStudent.studentName[0],
+                          textColor: AppColors().whiteColor,
+                          fontSize: 22,
+                        ),
+                      ),
+                    ),
+                    20.0.hSpace,
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        MyTexts().titleText(selectedStudent.studentName),
+                        MyTexts().regularText(selectedStudent.schoolName),
+                        MyTexts().regularText(selectedStudent.studentClassName),
+                      ],
+                    ),
+                  ],
                 ),
-                20.0.hSpace,
+                20.0.vSpace,
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    MyTexts().titleText(widget.student.studentName),
-                    MyTexts().regularText("Greenwood Academy,"),
-                    MyTexts().regularText(widget.student.studentClass),
+                    ...selectedStudent.fees.map((fee) {
+                      return FeesCard(
+                        label: fee.feeType,
+                        feeAmount: fee.amount,
+                      );
+                    }).toList(),
+                    20.0.vSpace,
+                    FeesCard(
+                      label: "Total",
+                      feeAmount: selectedStudent.fees
+                          .fold(0.0, (sum, fee) => sum + fee.amount),
+                      textColor: AppColors().redColor,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ],
+                ),
+                20.0.vSpace,
+                FeesCatCard(
+                  label: "Pay Fees",
+                  cardColor: AppColors().primaryColor,
                 ),
               ],
             ),
-            20.0.vSpace,
-            FeesCard(
-                label: "School Fees",
-                feeAmount: widget.student.studentSchoolFees),
-            FeesCard(
-                label: "PTA Dues", feeAmount: widget.student.studentPTAFees),
-            FeesCard(
-                label: "Exam Fees", feeAmount: widget.student.studentExamFees),
-            FeesCard(
-                label: "Admission Fees",
-                feeAmount: widget.student.studentAdmissionFees),
-            FeesCard(
-                label: "Sport Fees",
-                feeAmount: widget.student.studentSportsFee),
-            FeesCard(
-              label: "Total",
-              feeAmount: widget.student.studentSchoolFees +
-                  widget.student.studentPTAFees +
-                  widget.student.studentExamFees +
-                  widget.student.studentAdmissionFees +
-                  widget.student.studentSportsFee,
-              textColor: AppColors().redColor,
-              fontWeight: FontWeight.bold,
-            ),
-            20.0.vSpace,
-            Expanded(
-              child: GridView.builder(
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2),
-                itemCount: feeCatCard.length,
-                itemBuilder: (context, index) {
-                  final String feeCat = feeCatCard.keys.elementAt(index);
-                  final Color cardColor = feeCatCard.values.elementAt(index);
-                  return InkWell(
-                      onTap: () {
-                        Navigator.of(context).push(CupertinoPageRoute(
-                            builder: (context) => PayFees(
-                                  category: feeCat,
-                                )));
-                      },
-                      child: Padding(
-                        padding: const EdgeInsets.all(5.0),
-                        child: FeesCatCard(
-                          label: feeCat,
-                          cardColor: cardColor,
-                        ),
-                      ));
-                },
-              ),
-            ),
-          ],
-        ),
-      ),
+          ),
+        );
+      },
     );
   }
 }

@@ -9,7 +9,6 @@ class SubmitButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        width: 130,
         decoration: BoxDecoration(
           color: AppColors().primaryColor,
           borderRadius: BorderRadius.circular(5),
