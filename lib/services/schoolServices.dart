@@ -4,7 +4,7 @@ import 'package:myladmobile/utils/constants.dart';
 
 class SchoolService {
   final Dio _dio =
-      Dio(BaseOptions(baseUrl: "http://192.168.227.29:3000/api/schools"));
+      Dio(BaseOptions(baseUrl: "http://192.168.15.29:3000/api/schools"));
 
   Future<List<School>> fetchSchools() async {
     try {

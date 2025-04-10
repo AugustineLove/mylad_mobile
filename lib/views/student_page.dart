@@ -5,6 +5,7 @@ import 'package:myladmobile/model/student.dart';
 import 'package:myladmobile/provider/parentProvider.dart';
 import 'package:myladmobile/utils/colors.dart';
 import 'package:myladmobile/utils/text.dart';
+import 'package:myladmobile/views/select_feeType_toPay.dart';
 import 'package:myladmobile/widget/fees_card.dart';
 import 'package:myladmobile/widget/fees_cat_card.dart';
 import 'package:provider/provider.dart';
@@ -50,11 +51,12 @@ class _StudentPageState extends State<StudentPage> {
                   leading: CircleAvatar(
                     backgroundColor: AppColors().blueColor,
                     child: MyTexts().regularText(
-                      student.studentName[0],
+                      student.studentFirstName[0],
                       textColor: AppColors().whiteColor,
                     ),
                   ),
-                  title: MyTexts().regularText(student.studentName),
+                  title: MyTexts().regularText(
+                      '${student.studentFirstName} ${student.studentSurname}'),
                   subtitle: MyTexts().regularText(student.schoolName),
                   onTap: () {
                     setState(() {
@@ -109,7 +111,7 @@ class _StudentPageState extends State<StudentPage> {
                       ),
                       child: Center(
                         child: MyTexts().titleText(
-                          selectedStudent.studentName[0],
+                          selectedStudent.studentFirstName[0],
                           textColor: AppColors().whiteColor,
                           fontSize: 22,
                         ),
@@ -119,7 +121,8 @@ class _StudentPageState extends State<StudentPage> {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        MyTexts().titleText(selectedStudent.studentName),
+                        MyTexts().titleText(
+                            '${selectedStudent.studentFirstName} ${selectedStudent.studentSurname}'),
                         MyTexts().regularText(selectedStudent.schoolName),
                         MyTexts().regularText(selectedStudent.studentClassName),
                       ],
@@ -147,9 +150,19 @@ class _StudentPageState extends State<StudentPage> {
                   ],
                 ),
                 20.0.vSpace,
-                FeesCatCard(
-                  label: "Pay Fees",
-                  cardColor: AppColors().primaryColor,
+                InkWell(
+                  onTap: () {
+                    Navigator.of(context).push(CupertinoPageRoute(
+                        builder: (context) => FeeToPay(
+                              studentName: selectedStudent.studentFirstName,
+                            )));
+                  },
+                  child: Center(
+                    child: FeesCatCard(
+                      label: "Pay Fees",
+                      cardColor: AppColors().primaryColor,
+                    ),
+                  ),
                 ),
               ],
             ),

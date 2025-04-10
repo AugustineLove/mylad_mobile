@@ -2,34 +2,40 @@ import 'package:flutter/material.dart';
 
 class Student extends ChangeNotifier {
   final String studentId;
-  final String studentName;
+  final String studentSurname;
   final String studentClassName;
   final String schoolName;
   final String studentAddress;
-  final String studentParentName;
+  final String studentParentFirstName;
+  final String studentParentSurname;
   final String studentParentNumber;
+  final String studentFirstName;
   List<Fee> fees;
 
   Student({
     required this.studentId,
-    required this.studentName,
+    required this.studentSurname,
     required this.studentClassName,
     required this.schoolName,
     required this.studentAddress,
-    required this.studentParentName,
+    required this.studentParentFirstName,
+    required this.studentParentSurname,
     required this.studentParentNumber,
+    required this.studentFirstName,
     required this.fees,
   });
 
   factory Student.fromJson(Map<String, dynamic> json) {
     return Student(
       studentId: json['studentId'] ?? '', // ✅ Uses correct key
-      studentName: json['studentName'] ?? 'Unknown',
-      studentClassName: json['studentClassName'] ?? 'Unknown',
-      schoolName: (json['schoolName'] ?? ''), // ✅ Fixes object issue
-      studentAddress: json['studentAddress'] ?? 'No Address',
-      studentParentName: json['studentParentName'] ?? 'Unknown',
-      studentParentNumber: json['studentParentNumber'] ?? '',
+      studentSurname: json['student_surname'] ?? 'Unknown',
+      studentClassName: json['student_class_name'] ?? 'Unknown',
+      schoolName: (json['school_name'] ?? ''), // ✅ Fixes object issue
+      studentAddress: json['student_address'] ?? 'No Address',
+      studentParentFirstName: json['student_parent_first_name'] ?? 'Unknown',
+      studentParentSurname: json['student_parent_surname'] ?? 'Unknown',
+      studentParentNumber: json['student_parent_number'] ?? '',
+      studentFirstName: json['student_first_name'] ?? '',
       fees: (json['fees'] as List?)
               ?.map((fee) => Fee.fromJson(fee as Map<String, dynamic>))
               .toList() ??
@@ -41,7 +47,6 @@ class Student extends ChangeNotifier {
     fees = newFees;
     notifyListeners(); // Triggers UI rebuild
   }
-
 }
 
 class School {
@@ -71,7 +76,7 @@ class Fee {
 
   factory Fee.fromJson(Map<String, dynamic> json) {
     return Fee(
-      feeType: json['feeType'] ?? 'Unknown Fee',
+      feeType: json['feetype'] ?? 'Unknown Fee',
       amount: (json['amount'] as num?)?.toDouble() ?? 0.0,
       status: json['status'] ?? 'unknown',
     );

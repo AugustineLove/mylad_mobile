@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:myladmobile/utils/colors.dart';
+import 'package:myladmobile/utils/screen_sizes.dart';
 import 'package:myladmobile/utils/text.dart';
 
 class SubmitButton extends StatelessWidget {
@@ -9,6 +10,7 @@ class SubmitButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+        width: Screen.width(context) * .5,
         decoration: BoxDecoration(
           color: AppColors().primaryColor,
           borderRadius: BorderRadius.circular(5),

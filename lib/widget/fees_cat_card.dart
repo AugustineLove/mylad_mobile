@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:myladmobile/utils/colors.dart';
+import 'package:myladmobile/utils/screen_sizes.dart';
 import 'package:myladmobile/utils/text.dart';
 
 class FeesCatCard extends StatelessWidget {
@@ -10,8 +11,8 @@ class FeesCatCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 160,
-      height: 120,
+      width: Screen.width(context) * 0.7,
+      height: 70,
       decoration: BoxDecoration(
         color: cardColor ?? AppColors().primaryColor,
         borderRadius: BorderRadius.circular(5),

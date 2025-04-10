@@ -22,7 +22,7 @@ class ChildCard extends StatelessWidget {
                 shape: BoxShape.circle,
               ),
               child: Center(
-                child: MyTexts().titleText(student.studentName[0],
+                child: MyTexts().titleText(student.studentParentFirstName[0],
                     textColor: AppColors().whiteColor),
               )),
           20.0.hSpace,
@@ -33,9 +33,10 @@ class ChildCard extends StatelessWidget {
                 color: AppColors().whiteColor,
                 boxShadow: [
                   BoxShadow(
-                      color: AppColors().greyColor.withOpacity(0.5),
-                      blurRadius: 4,
-                      offset: Offset(0, 2))
+                    color: AppColors().greyColor.withOpacity(0.5),
+                    blurRadius: 4,
+                    offset: Offset(0, 2),
+                  )
                 ],
                 borderRadius: BorderRadius.circular(10),
               ),
@@ -46,8 +47,9 @@ class ChildCard extends StatelessWidget {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        MyTexts()
-                            .regularText(student.studentName, fontSize: 14),
+                        MyTexts().regularText(
+                            '${student.studentFirstName} ${student.studentSurname}',
+                            fontSize: 14),
                         MyTexts().regularText(student.studentClassName),
                       ],
                     ),

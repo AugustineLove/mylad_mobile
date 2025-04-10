@@ -1,7 +1,9 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 import 'package:http/http.dart' as http;
 import 'package:myladmobile/utils/colors.dart';
+import 'package:myladmobile/utils/constants.dart';
 import 'package:myladmobile/views/home_page.dart';
 
 class OTPVerificationScreen extends StatefulWidget {
@@ -23,39 +25,65 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
   Future<void> verifyOTP() async {
     if (otpController.text.trim().isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Please enter the OTP.")),
+        SnackBar(content: Text("Please enter the code sent to you")),
       );
       return;
     }
 
     setState(() => isLoading = true);
 
-    final url = Uri.parse("http://192.168.227.29:3000/api/parents/verify-otp");
+    final url = Uri.parse("${baseUrl}otp/verify-otp");
+
     try {
       final response = await http.post(
         url,
         headers: {"Content-Type": "application/json"},
         body: jsonEncode({
           "phoneNumber": widget.phoneNumber,
-          "otp": otpController.text.trim(),
+          "code": otpController.text.trim(),
         }),
       );
 
       setState(() => isLoading = false);
 
+      // Log the response body for debugging
+      print("Response body: ${response.body}");
+      logger.d("Response status: ${response.statusCode}");
+
+      // Check if response code is 200
       if (response.statusCode == 200) {
-        Navigator.of(context).pushReplacement(
-          MaterialPageRoute(
-            builder: (context) => HomePage(),
-          ),
-        );
+        var responseJson = jsonDecode(response.body);
+
+        // Ensure the response message matches "Successful"
+        if (responseJson['message'] == 'Successful') {
+          var box = await Hive.openBox('user'); // Open the box
+          await box.put(
+              'phoneNumber', widget.phoneNumber); // Store the phone number
+          await box.put(
+              'isVerified', true); // Optionally store verification status
+
+          logger.d("Stored user info: ${box.toMap()}");
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(
+              builder: (context) => HomePage(),
+            ),
+          );
+        } else {
+          // Handle unexpected response message
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text("Invalid OTP. Please try again.")),
+          );
+        }
       } else {
+        // Log the error status code for debugging
+        print("Error Status Code: ${response.statusCode}");
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Invalid OTP. Please try again.")),
+          SnackBar(content: Text("An error occurred. Please try again.")),
         );
       }
     } catch (e) {
       setState(() => isLoading = false);
+      print("Error: $e"); // Log the error for debugging
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("An error occurred. Please try again.")),
       );
