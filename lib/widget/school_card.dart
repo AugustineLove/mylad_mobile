@@ -38,10 +38,17 @@ class _SchoolCardState extends State<SchoolCard> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             // Make the image flexible if necessary
-            SizedBox(
+            Container(
               width: 40,
               height: 40,
-              child: Image(image: AssetImage("assets/greenwood.png")),
+              decoration: BoxDecoration(
+                color: AppColors().primaryColor,
+                borderRadius: BorderRadius.circular(2),
+              ),
+              child: Center(
+                child: MyTexts().regularText(widget.schoolName[0],
+                    textColor: AppColors().whiteColor),
+              ),
             ),
             10.0.hSpace, // Reduce space for better fit
             Expanded(

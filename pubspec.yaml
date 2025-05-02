@@ -16,7 +16,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 # In Windows, build-name is used as the major, minor, and patch parts
 # of the product and file versions while build-number is used as the build suffix.
-version: 1.0.0+1
+version: 1.1.0+2
 
 environment:
   sdk: ^3.5.4
@@ -43,6 +43,14 @@ dependencies:
   hive: ^2.2.3
   hive_flutter: ^1.1.0
   url_launcher: ^6.3.1
+  rename_app: ^1.6.2
+  flutter_launcher_icons: ^0.14.3
+
+  hubtel_merchant_checkout_sdk:
+    git:
+      url: https://github.com/hubtel/hubtel-mobile-flutter-merchant-checkout-sdk.git
+      ref: master
+
 
 dev_dependencies:
   flutter_test:

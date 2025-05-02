@@ -7,9 +7,14 @@ class Student extends ChangeNotifier {
   final String schoolName;
   final String studentAddress;
   final String studentParentFirstName;
+  String? studentOtherNames;
   final String studentParentSurname;
   final String studentParentNumber;
   final String studentFirstName;
+  final String schoolWebsite;
+  final String schoolEmail;
+  String? schoolSubAccountCode;
+  String? studentParentEmail;
   List<Fee> fees;
 
   Student({
@@ -19,30 +24,39 @@ class Student extends ChangeNotifier {
     required this.schoolName,
     required this.studentAddress,
     required this.studentParentFirstName,
+    this.studentOtherNames,
     required this.studentParentSurname,
     required this.studentParentNumber,
     required this.studentFirstName,
+    required this.schoolWebsite,
+    required this.schoolEmail,
+    this.schoolSubAccountCode,
+    this.studentParentEmail,
     required this.fees,
   });
 
   factory Student.fromJson(Map<String, dynamic> json) {
     return Student(
-      studentId: json['studentId'] ?? '', // ✅ Uses correct key
+      studentId: json['student_id'] ?? '', // ✅ Uses correct key
       studentSurname: json['student_surname'] ?? 'Unknown',
       studentClassName: json['student_class_name'] ?? 'Unknown',
       schoolName: (json['school_name'] ?? ''), // ✅ Fixes object issue
       studentAddress: json['student_address'] ?? 'No Address',
       studentParentFirstName: json['student_parent_first_name'] ?? 'Unknown',
+      studentOtherNames: json['student_other_names'] ?? '',
       studentParentSurname: json['student_parent_surname'] ?? 'Unknown',
       studentParentNumber: json['student_parent_number'] ?? '',
       studentFirstName: json['student_first_name'] ?? '',
+      schoolWebsite: json['school_website'] ?? '',
+      schoolEmail: json['school_email'] ?? '',
+      schoolSubAccountCode: json['subaccount_code'],
+      studentParentEmail: json['student_parent_email'],
       fees: (json['fees'] as List?)
               ?.map((fee) => Fee.fromJson(fee as Map<String, dynamic>))
               .toList() ??
           [],
     );
   }
-
   void updateFees(List<Fee> newFees) {
     fees = newFees;
     notifyListeners(); // Triggers UI rebuild

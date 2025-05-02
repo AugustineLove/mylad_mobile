@@ -22,7 +22,7 @@ class ChildCard extends StatelessWidget {
                 shape: BoxShape.circle,
               ),
               child: Center(
-                child: MyTexts().titleText(student.studentParentFirstName[0],
+                child: MyTexts().titleText(student.studentFirstName[0],
                     textColor: AppColors().whiteColor),
               )),
           20.0.hSpace,

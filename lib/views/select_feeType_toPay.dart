@@ -20,6 +20,11 @@ class FeeToPay extends StatefulWidget {
 class _FeeToPayState extends State<FeeToPay> {
   List<Fee> unpaidFees = [];
   Fee? selectedFee;
+  String? parentEmail;
+  String? parentName;
+  String? studentToPayId;
+  String? studentFullName;
+  String? subAccountCode;
   TextEditingController amountController = TextEditingController();
 
   void fetchUnpaidFees() {
@@ -38,12 +43,20 @@ class _FeeToPayState extends State<FeeToPay> {
         studentParentSurname: '',
         studentParentNumber: '',
         studentFirstName: '',
+        schoolWebsite: '',
+        schoolEmail: '',
         fees: [],
       ),
     );
 
+    parentEmail = selectedStudent.studentParentEmail;
+    studentToPayId = selectedStudent.studentId;
+    parentName = selectedStudent.studentParentFirstName;
+    subAccountCode = selectedStudent.schoolSubAccountCode;
+    studentFullName =
+        "${selectedStudent.studentFirstName} ${selectedStudent.studentSurname}";
+
     unpaidFees = selectedStudent.fees.where((fee) => fee.amount > 0).toList();
-    logger.d("Unpaid fees: $unpaidFees");
     setState(() {});
   }
 
@@ -63,7 +76,23 @@ class _FeeToPayState extends State<FeeToPay> {
   }
 
   void payFees() async {
-    logger.d('Initializing......');
+    logger.d('Initializing payment...');
+
+    if (parentEmail == null || parentEmail!.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Add parent's email before proceeding.")),
+      );
+      return;
+    }
+
+    if (subAccountCode == null || subAccountCode!.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+            content: Text("This school doesn't support online payments.")),
+      );
+      return;
+    }
+
     if (selectedFee == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("Please select a fee to pay.")),
@@ -79,7 +108,6 @@ class _FeeToPayState extends State<FeeToPay> {
     }
 
     final double amount = double.tryParse(amountController.text) ?? 0;
-    logger.d(amount);
     if (amount <= 0) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("Enter a valid amount.")),
@@ -87,19 +115,29 @@ class _FeeToPayState extends State<FeeToPay> {
       return;
     }
 
-    // dummy email — replace with parent's email from provider if available
-    final email = "parent@example.com";
-    final studentId = "abc123"; // replace with actual studentId
+    final url = Uri.parse('${baseUrl}paystack/initialize');
     final feeType = selectedFee!.feeType;
 
-    final url = Uri.parse('${baseUrl}paystack/initialize');
-
     final body = jsonEncode({
-      "email": email,
-      "amount": amount, 
-      "studentId": studentId,
+      "email": parentEmail,
+      "amount": amount,
+      "subaccount": subAccountCode,
+      "studentId": studentToPayId,
       "feeType": feeType,
+      "metadata": {
+        "custom_fields": [
+          {
+            "feeType": feeType,
+            "studentId": studentToPayId,
+            "studentName": studentFullName,
+            "parentName": parentName,
+            "amount": amount,
+          }
+        ],
+      }
     });
+
+    logger.d("Payment body: $body");
 
     try {
       final response = await http.post(
@@ -108,28 +146,29 @@ class _FeeToPayState extends State<FeeToPay> {
         body: body,
       );
 
+      logger.d("Raw response: ${response.body}");
       final data = json.decode(response.body);
 
       if (data['status'] == true) {
         final authUrl = data['data']['authorization_url'];
         final reference = data['data']['reference'];
 
-        // ✅ Launch Paystack checkout page in browser
         if (await canLaunchUrl(Uri.parse(authUrl))) {
-          await _launchUrl("${Uri.parse(authUrl)}");
+          await _launchUrl(authUrl);
         } else {
           throw 'Could not launch Paystack URL';
         }
 
-        // Optionally store reference to verify later
-        print("Payment reference: $reference");
+        logger.d("Payment reference: $reference");
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Failed to initiate payment: ${data}")),
+          SnackBar(
+              content: Text(
+                  "Payment failed: ${data['message'] ?? 'Try again later.'}")),
         );
       }
     } catch (e) {
-      print("Error: $e");
+      logger.e("Payment error: $e");
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("Something went wrong. Try again.")),
       );

@@ -149,7 +149,7 @@ class _StudentPageState extends State<StudentPage> {
                     ),
                   ],
                 ),
-                20.0.vSpace,
+                /*  20.0.vSpace,
                 InkWell(
                   onTap: () {
                     Navigator.of(context).push(CupertinoPageRoute(
@@ -163,7 +163,7 @@ class _StudentPageState extends State<StudentPage> {
                       cardColor: AppColors().primaryColor,
                     ),
                   ),
-                ),
+                ), */
               ],
             ),
           ),

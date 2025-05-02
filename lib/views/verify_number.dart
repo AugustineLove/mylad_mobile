@@ -27,9 +27,17 @@ class _VerifyNumberState extends State<VerifyNumber> {
   final _formKey = GlobalKey<FormState>();
   bool isLoading = false;
   bool isRegistered = true;
+  Timer? _resetTimer;
 
   // Function to verify parent number
   // Function to verify parent number
+
+  @override
+  void dispose() {
+    _resetTimer?.cancel(); // cancel timer if still active
+    phoneController.dispose(); // don't forget to dispose controllers too
+    super.dispose();
+  }
 
   Future<void> verifyParentNumber() async {
     logger.d('In the function');
@@ -79,21 +87,29 @@ class _VerifyNumberState extends State<VerifyNumber> {
         }
       } else {
         logger.d("Unexpected response.");
-        setState(() {
-          isRegistered = false;
-        });
-        Timer(Duration(seconds: 8), () {
+        if (mounted) {
           setState(() {
-            isRegistered = true;
+            isRegistered = false;
           });
+        }
+
+        _resetTimer = Timer(Duration(seconds: 8), () {
+          if (mounted) {
+            setState(() {
+              isRegistered = true;
+            });
+          }
         });
+
         /* _showMessage("No message found for this phone number"); */
       }
     } catch (error) {
       logger.e("Error verifying parent number: $error");
       _showMessage("An error occurred. Please check your connection.");
     } finally {
-      setState(() => isLoading = false);
+      if (mounted) {
+        setState(() => isLoading = false);
+      }
     }
   }
 
@@ -212,7 +228,7 @@ class _VerifyNumberState extends State<VerifyNumber> {
             MyTexts().regularText(
               isRegistered
                   ? ''
-                  : 'Your mobile number is not registered with any account on our platform, Please contact the school of your ward.',
+                  : 'Your mobile number is not registered with any account on our platform, please contact the school of your ward.',
               textColor: AppColors().redColor,
               textAlign: TextAlign.center,
             )

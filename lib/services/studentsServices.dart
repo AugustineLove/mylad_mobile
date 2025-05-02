@@ -35,3 +35,31 @@ Future<void> fetchAndStoreStudents(
     print("Error fetching students on home init: $e");
   }
 }
+
+Future<bool> updateStudentParentEmail(
+    List<String> studentIds, String email) async {
+  final url = Uri.parse("http://192.168.123.29:5050/api/parents/addEmail");
+  try {
+    final response = await http.put(
+      url,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode({
+        'parentEmail': email,
+        'studentIds': studentIds,
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      print('Email updated successfully');
+      return true;
+    } else {
+      print('Failed to update email. Status: ${response.statusCode}');
+      return false;
+    }
+  } catch (e) {
+    print('Error updating email: $e');
+    return false;
+  }
+}
