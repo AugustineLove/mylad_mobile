@@ -14,7 +14,7 @@ if (keystorePropertiesFile.exists()) {
 
 
 android {
-    namespace = "com.example.myladmobile"
+    namespace = 'com.example.myladmobile'
     compileSdk = 34
     ndkVersion = "25.1.8937393"
 
