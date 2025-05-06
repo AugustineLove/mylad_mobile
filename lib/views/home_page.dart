@@ -93,13 +93,13 @@ class _HomePageState extends State<HomePage> {
     final students = parentProvider.students;
     final parent = students.isNotEmpty ? students.first : null;
 
+    // Grouping students by school name
     Map<String, List<Student>> groupedStudents = {};
     for (var student in students) {
       groupedStudents.putIfAbsent(student.schoolName, () => []).add(student);
     }
 
     List<String> allStudentIds = students.map((e) => e.studentId).toList();
-    logger.d('All studentIds: $allStudentIds');
 
     return Scaffold(
       backgroundColor: AppColors().whiteColor,
@@ -111,25 +111,25 @@ class _HomePageState extends State<HomePage> {
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: InkWell(
-              onTap: () {
-                _logout();
-              },
+              onTap: _logout,
               child: Icon(
                 Icons.logout,
                 color: AppColors().redColor,
               ),
             ),
-          )
+          ),
         ],
       ),
       body: isLoading
           ? const Center(child: CircularProgressIndicator())
           : Padding(
-              padding: const EdgeInsets.all(20.0),
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 20.0, vertical: 16.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  if (parent != null)
+                  if (parent != null) ...[
+                    // Parent Information Section
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -137,10 +137,11 @@ class _HomePageState extends State<HomePage> {
                           radius: 40,
                           backgroundColor: AppColors().primaryColor,
                           child: MyTexts().titleText(
-                              parent.studentParentSurname[0],
-                              textColor: AppColors().whiteColor),
+                            parent.studentParentSurname[0],
+                            textColor: AppColors().whiteColor,
+                          ),
                         ),
-                        16.0.hSpace,
+                        const SizedBox(width: 16),
                         Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -155,7 +156,8 @@ class _HomePageState extends State<HomePage> {
                                 fontSize: 14,
                                 textColor: Colors.grey[600],
                               ),
-                              5.0.vSpace,
+                              const SizedBox(height: 8),
+                              // Email Input or Display
                               if (parent.studentParentEmail == null)
                                 showEmailInput
                                     ? Row(
@@ -178,7 +180,7 @@ class _HomePageState extends State<HomePage> {
                                               }
                                             },
                                             icon: const Icon(Icons.save),
-                                          )
+                                          ),
                                         ],
                                       )
                                     : GestureDetector(
@@ -206,12 +208,14 @@ class _HomePageState extends State<HomePage> {
                         ),
                       ],
                     ),
-                  30.0.vSpace,
+                    const SizedBox(height: 30),
+                  ],
+                  // Children Section
                   MyTexts().titleText(
                     "Your Children",
                     textColor: AppColors().primaryColor,
                   ),
-                  20.0.vSpace,
+                  const SizedBox(height: 20),
                   Expanded(
                     child: students.isEmpty
                         ? const Center(child: Text("No students found."))
@@ -220,35 +224,40 @@ class _HomePageState extends State<HomePage> {
                               final schoolName = entry.key;
                               final children = entry.value;
 
-                              return Column(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  SchoolCard(
-                                    schoolName: schoolName,
-                                    schoolMoto: children.first.schoolEmail,
-                                    schoolLogo: "schoolLogo",
-                                  ),
-                                  16.0.vSpace,
-                                  ...children.map((student) {
-                                    return InkWell(
-                                      onTap: () {
-                                        Navigator.of(context).push(
-                                          CupertinoPageRoute(
-                                            builder: (_) => StudentPage(
-                                              initialStudent: student,
+                              return Padding(
+                                padding: const EdgeInsets.only(bottom: 20),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    // School Card Section
+                                    SchoolCard(
+                                      schoolName: schoolName,
+                                      schoolMoto: children.first.schoolEmail,
+                                      schoolLogo:
+                                          "schoolLogo", // Add logo URL or asset
+                                    ),
+                                    const SizedBox(height: 16),
+                                    // Children Cards
+                                    ...children.map((student) {
+                                      return InkWell(
+                                        onTap: () {
+                                          Navigator.of(context).push(
+                                            CupertinoPageRoute(
+                                              builder: (_) => StudentPage(
+                                                initialStudent: student,
+                                              ),
                                             ),
-                                          ),
-                                        );
-                                      },
-                                      child: ChildCard(student: student),
-                                    );
-                                  }).toList(),
-                                  40.0.vSpace,
-                                ],
+                                          );
+                                        },
+                                        child: ChildCard(student: student),
+                                      );
+                                    }).toList(),
+                                  ],
+                                ),
                               );
                             }).toList(),
                           ),
-                  )
+                  ),
                 ],
               ),
             ),
