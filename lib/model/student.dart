@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 class Student extends ChangeNotifier {
   final String studentId;
+  final String schoolId;
   final String studentSurname;
   final String studentClassName;
   final String schoolName;
@@ -11,7 +12,7 @@ class Student extends ChangeNotifier {
   final String studentParentSurname;
   final String studentParentNumber;
   final String studentFirstName;
-  final String schoolWebsite;
+  String? schoolWebsite;
   final String schoolEmail;
   String? schoolSubAccountCode;
   String? studentParentEmail;
@@ -19,6 +20,7 @@ class Student extends ChangeNotifier {
 
   Student({
     required this.studentId,
+    required this.schoolId,
     required this.studentSurname,
     required this.studentClassName,
     required this.schoolName,
@@ -28,7 +30,7 @@ class Student extends ChangeNotifier {
     required this.studentParentSurname,
     required this.studentParentNumber,
     required this.studentFirstName,
-    required this.schoolWebsite,
+    this.schoolWebsite,
     required this.schoolEmail,
     this.schoolSubAccountCode,
     this.studentParentEmail,
@@ -38,6 +40,7 @@ class Student extends ChangeNotifier {
   factory Student.fromJson(Map<String, dynamic> json) {
     return Student(
       studentId: json['student_id'] ?? '', // ✅ Uses correct key
+      schoolId: json['school_id'] ?? '', // ✅ Uses correct key
       studentSurname: json['student_surname'] ?? 'Unknown',
       studentClassName: json['student_class_name'] ?? 'Unknown',
       schoolName: (json['school_name'] ?? ''), // ✅ Fixes object issue

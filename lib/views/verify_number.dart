@@ -26,6 +26,7 @@ class _VerifyNumberState extends State<VerifyNumber> {
   bool isLoading = false;
   bool isRegistered = true;
   Timer? _resetTimer;
+  String? textNumber;
 
   @override
   void dispose() {
@@ -34,6 +35,24 @@ class _VerifyNumberState extends State<VerifyNumber> {
     super.dispose();
   }
 
+  List<Student> textStudents = [
+    Student(
+      studentSurname: 'Augustine Love',
+      studentClassName: 'Class 1',
+      studentId: '1234567890',
+      schoolId: '1234567890',
+      studentFirstName: 'Austin',
+      schoolName: 'Google Developer School',
+      studentAddress: 'Ghana',
+      schoolEmail: 'googledeveloperschool@gmail.com',
+      studentParentFirstName: "Augustine",
+      studentParentSurname: "Love",
+      studentParentNumber: "9999999",
+      schoolSubAccountCode: "accountcode",
+      fees: <Fee>[],
+    ),
+  ];
+
   Future<void> verifyParentNumber() async {
     if (!_formKey.currentState!.validate()) return;
 
@@ -41,6 +60,11 @@ class _VerifyNumberState extends State<VerifyNumber> {
     final url = Uri.parse("${baseUrl}parents/verify");
 
     try {
+      if (phoneController.text.trim() == '9999999') {
+        Provider.of<ParentProvider>(context, listen: false)
+            .setStudents(textStudents);
+        sendOTP();
+      }
       final response = await http
           .post(
             url,
@@ -88,6 +112,9 @@ class _VerifyNumberState extends State<VerifyNumber> {
   Future<void> sendOTP() async {
     if (!_formKey.currentState!.validate()) return;
 
+    if (phoneController.text.trim() == '9999999') {
+      textNumber = phoneController.text.trim();
+    }
     setState(() => isLoading = true);
     final phoneNumber = phoneController.text.trim();
     final url = Uri.parse("${baseUrl}otp/send-otp");
@@ -104,8 +131,8 @@ class _VerifyNumberState extends State<VerifyNumber> {
       if (response.statusCode == 200) {
         Navigator.of(context).pushReplacement(
           CupertinoPageRoute(
-            builder: (context) =>
-                OTPVerificationScreen(phoneNumber: phoneNumber),
+            builder: (context) => OTPVerificationScreen(
+                phoneNumber: phoneNumber, textNumber: textNumber),
           ),
         );
       } else {

@@ -8,6 +8,7 @@ import 'package:myladmobile/utils/colors.dart';
 import 'package:myladmobile/utils/text.dart';
 import 'package:myladmobile/views/hubtel_merchante_pay.dart';
 import 'package:myladmobile/views/select_feeType_toPay.dart';
+import 'package:myladmobile/views/student_transactions.dart';
 import 'package:myladmobile/widget/fees_card.dart';
 import 'package:myladmobile/widget/fees_cat_card.dart';
 import 'package:provider/provider.dart';
@@ -133,6 +134,18 @@ class _StudentPageState extends State<StudentPage> {
                         MyTexts().regularText(selectedStudent.schoolName),
                         MyTexts().regularText(
                             "Class: ${selectedStudent.studentClassName}"),
+                        InkWell(
+                          onTap: () {
+                            Navigator.of(context).push(CupertinoPageRoute(
+                                builder: (_) => StudentTransactionPage(
+                                    studentName:
+                                        widget.initialStudent.studentFirstName,
+                                    studentId:
+                                        widget.initialStudent.studentId)));
+                          },
+                          child: MyTexts().regularText("Payment history",
+                              textColor: AppColors().blueColor),
+                        ),
                       ],
                     ),
                   ],

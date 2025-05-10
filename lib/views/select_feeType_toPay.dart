@@ -35,6 +35,7 @@ class _FeeToPayState extends State<FeeToPay> {
       (student) => student.studentFirstName == widget.studentName,
       orElse: () => Student(
         studentId: '',
+        schoolId: '',
         studentSurname: '',
         studentClassName: '',
         schoolName: '',

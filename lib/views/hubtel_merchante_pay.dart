@@ -31,17 +31,9 @@ class _HubtelCheckoutPageState extends State<HubtelCheckoutPage> {
     merchantApiKey: "TTFEeHJsQTpjMzliMjgyZGQ1NmY0OWNhYTViNWNlYzExZTYyMTlhNw==",
   );
 
-  final List<String> feeTypes = [
-    "Tuition",
-    "PTA Dues",
-    "Feeding Fee",
-    "Boarding Fee",
-  ];
-
   @override
   void initState() {
     super.initState();
-    selectedFeeType = widget.feeType;
   }
 
   @override
@@ -177,7 +169,7 @@ class _HubtelCheckoutPageState extends State<HubtelCheckoutPage> {
                     amount: amount,
                     customerPhoneNumber: widget.parent.studentParentNumber,
                     purchaseDescription:
-                        "Payment of $amount from ${widget.parent.studentParentSurname} for ${widget.student.studentFirstName} ${widget.student.studentSurname}'${selectedFeeType!}",
+                        "Payment of GHS $amount received from ${widget.parent.studentParentFirstName} ${widget.parent.studentParentSurname} for ${widget.student.studentFirstName} ${widget.student.studentSurname} (Class: ${widget.student.studentClassName}) towards ${selectedFeeType!}— School: ${widget.student.schoolName}",
                     clientReference:
                         "TXN-${DateTime.now().millisecondsSinceEpoch}",
                   );
