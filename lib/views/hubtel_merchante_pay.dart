@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:hubtel_merchant_checkout_sdk/hubtel_merchant_checkout_sdk.dart';
 import 'package:myladmobile/model/student.dart';
 import 'package:myladmobile/utils/colors.dart';
-import 'package:myladmobile/utils/constants.dart';
 import 'package:myladmobile/utils/text.dart';
 
 class HubtelCheckoutPage extends StatefulWidget {
@@ -27,7 +26,7 @@ class _HubtelCheckoutPageState extends State<HubtelCheckoutPage> {
 
   final configuration = HubtelCheckoutConfiguration(
     merchantID: "2029967",
-    callbackUrl: "https://myward.space/",
+    callbackUrl: "https://sfmyward.space/api/payment/webhook/hubtel-payment",
     merchantApiKey: "TTFEeHJsQTpjMzliMjgyZGQ1NmY0OWNhYTViNWNlYzExZTYyMTlhNw==",
   );
 

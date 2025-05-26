@@ -60,11 +60,6 @@ class _VerifyNumberState extends State<VerifyNumber> {
     final url = Uri.parse("${baseUrl}parents/verify");
 
     try {
-      if (phoneController.text.trim() == '9999999') {
-        Provider.of<ParentProvider>(context, listen: false)
-            .setStudents(textStudents);
-        sendOTP();
-      }
       final response = await http
           .post(
             url,
@@ -91,6 +86,10 @@ class _VerifyNumberState extends State<VerifyNumber> {
         } else {
           _showMessage("Invalid response from server.");
         }
+      } else if (phoneController.text.trim() == '9999999') {
+        Provider.of<ParentProvider>(context, listen: false)
+            .setStudents(textStudents);
+        sendOTP();
       } else {
         setState(() => isRegistered = false);
         _resetTimer = Timer(const Duration(seconds: 8), () {
